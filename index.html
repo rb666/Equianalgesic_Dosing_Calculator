@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A static equianalgesic opioid dose conversion calculator for clinical decision support."
+    />
+    <title>Equianalgesic Dose Calculator</title>
+    <link rel="preconnect" href="https://images.unsplash.com" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-copy">
+        <p class="eyebrow">Clinical decision support</p>
+        <h1>Equianalgesic Dose Calculator</h1>
+        <p>
+          Convert between common morphine, oxycodone, and hydromorphone routes
+          using a 10 mg IV morphine reference point.
+        </p>
+      </div>
+      <img
+        class="header-image"
+        src="https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=900&q=80"
+        alt="Clinician reviewing patient care in a hospital setting"
+      />
+    </header>
+
+    <main>
+      <section class="safety-banner" aria-label="Safety warning">
+        <div>
+          <strong>High-risk medication warning</strong>
+          <p>
+            This calculator is a clinical decision support tool only. It is not a
+            substitute for professional medical judgment, institutional policy,
+            pharmacist review, or patient-specific assessment.
+          </p>
+        </div>
+        <p>
+          Verify opioid tolerance, indication, organ function, sedation risk,
+          concomitant CNS depressants, formulation constraints, and monitoring
+          before prescribing.
+        </p>
+      </section>
+
+      <section class="calculator-layout" aria-label="Dose conversion tool">
+        <form class="calculator-panel" id="calculatorForm">
+          <div class="section-heading">
+            <p class="eyebrow">Inputs</p>
+            <h2>Current regimen</h2>
+          </div>
+
+          <div class="field-grid">
+            <label for="currentDrug">
+              Current drug and route
+              <select id="currentDrug" name="currentDrug"></select>
+            </label>
+
+            <label for="currentDose">
+              Dose to convert, mg
+              <input
+                id="currentDose"
+                name="currentDose"
+                type="number"
+                min="0"
+                step="0.01"
+                inputmode="decimal"
+                value="10"
+                required
+              />
+            </label>
+
+            <label for="targetDrug">
+              Target drug and route
+              <select id="targetDrug" name="targetDrug"></select>
+            </label>
+
+            <div class="slider-group">
+              <div class="slider-header">
+                <label for="reductionRange">Cross-tolerance reduction</label>
+                <div class="percent-input">
+                  <input
+                    id="reductionNumber"
+                    name="reductionNumber"
+                    type="number"
+                    min="0"
+                    max="75"
+                    step="1"
+                    value="25"
+                  />
+                  <span>%</span>
+                </div>
+              </div>
+              <input
+                id="reductionRange"
+                name="reductionRange"
+                type="range"
+                min="0"
+                max="75"
+                step="1"
+                value="25"
+              />
+              <div class="range-labels" aria-hidden="true">
+                <span>0%</span>
+                <span>25%</span>
+                <span>50%</span>
+                <span>75%</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="basis-note">
+            Enter a single dose or a 24-hour total. Interpret the output on the
+            same basis.
+          </p>
+
+          <div class="button-row">
+            <button type="submit">Calculate</button>
+            <button class="secondary-button" type="button" id="exampleButton">
+              Load IV hydromorphone example
+            </button>
+          </div>
+        </form>
+
+        <section class="result-panel" aria-live="polite" aria-atomic="true">
+          <div class="section-heading">
+            <p class="eyebrow">Result</p>
+            <h2 id="resultTitle">Oral oxycodone target dose</h2>
+          </div>
+
+          <div class="dose-result">
+            <span id="finalDose">100</span>
+            <span id="finalUnit">mg</span>
+          </div>
+          <p id="resultSentence">
+            Start from the reduced calculated dose, then individualize based on
+            clinical context and available formulations.
+          </p>
+
+          <dl class="calculation-steps">
+            <div>
+              <dt>IV morphine equivalent</dt>
+              <dd id="ivMorphineEquivalent">66.67 mg</dd>
+            </div>
+            <div>
+              <dt>Raw target dose</dt>
+              <dd id="rawTargetDose">133.33 mg</dd>
+            </div>
+            <div>
+              <dt>Reduction applied</dt>
+              <dd id="reductionApplied">25% reduction</dd>
+            </div>
+          </dl>
+
+          <div class="clinical-notes">
+            <h3>Before ordering</h3>
+            <ul>
+              <li>Use extra caution for older, frail, opioid-naive, or unstable patients.</li>
+              <li>Do not use this tool for methadone, fentanyl patches, buprenorphine, or PCA settings.</li>
+              <li>Reassess analgesia, respiratory rate, sedation, and adverse effects after conversion.</li>
+            </ul>
+          </div>
+        </section>
+      </section>
+
+      <section class="reference-section" aria-label="Conversion reference">
+        <div class="section-heading">
+          <p class="eyebrow">Reference</p>
+          <h2>Equianalgesic values used</h2>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Medication</th>
+                <th scope="col">Route</th>
+                <th scope="col">Dose equal to 10 mg IV morphine</th>
+              </tr>
+            </thead>
+            <tbody id="referenceTable"></tbody>
+          </table>
+        </div>
+
+        <p class="reference-copy">
+          Defaults reflect common equianalgesic table values. Equivalence varies
+          by patient, setting, opioid exposure, and source table. Review the
+          linked references and local policy before clinical use.
+        </p>
+        <ul class="source-links">
+          <li>
+            <a
+              href="https://www.merckmanuals.com/professional/multimedia/table/equianalgesic-doses-of-opioid-analgesics"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Merck Manual Professional: Equianalgesic Doses of Opioid Analgesics
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://hospitalhandbook.ucsf.edu/content/08-pain-management"
+              target="_blank"
+              rel="noreferrer"
+            >
+              UCSF Hospital Handbook: Pain Management
+            </a>
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        For clinician use only. No calculation should be used without bedside
+        review and documentation of patient-specific rationale.
+      </p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
