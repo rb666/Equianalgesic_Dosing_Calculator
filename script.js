@@ -82,6 +82,16 @@ const conversionOptions = [
     targetable: false,
   },
   {
+    id: "Fentanyl_IV",
+    medication: "Fentanyl",
+    route: "IV",
+    referenceDose: 0.15,
+    doseUnit: "mg",
+    oralMorphineEquivalent: 30,
+    label: "Fentanyl IV",
+    targetable: true,
+  },
+  {
     id: "Hydrocodone_Oral",
     medication: "Hydrocodone",
     route: "Oral",
