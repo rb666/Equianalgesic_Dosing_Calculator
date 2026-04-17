@@ -323,83 +323,89 @@
         </section>
       </details>
 
-      <section class="buprenorphine-layout" aria-label="Buprenorphine transition tool">
-        <form class="calculator-panel" id="buprenorphineForm">
-          <div class="section-heading">
-            <p class="eyebrow">Buprenorphine products</p>
-            <h2>MEDD-based cross-titration schedule</h2>
-          </div>
+      <details class="compact-section" aria-label="Buprenorphine transition tool">
+        <summary>
+          <span class="compact-title">
+            <span class="eyebrow">Buprenorphine products</span>
+            <strong>MEDD-based cross-titration schedule</strong>
+            <span>Belbuca and Suboxone schedules by current MEDD range.</span>
+          </span>
+          <span class="summary-action" aria-hidden="true"></span>
+        </summary>
 
-          <div class="field-grid">
-            <label for="buprenorphineMeddRange">
-              Current MEDD range and product
-              <select id="buprenorphineMeddRange" name="buprenorphineMeddRange"></select>
-              <span class="field-hint">Belbuca covers 30-160 mg MEDD; Suboxone covers 161-300 mg MEDD.</span>
-            </label>
-          </div>
-
-          <p class="basis-note">
-            Select the current MEDD range to view the corresponding buprenorphine
-            product schedule. Stabilize earlier if pain and withdrawal are
-            controlled.
-          </p>
-
-          <div class="button-row">
-            <button type="button" id="buprenorphineCalculateButton">
-              Show schedule
-            </button>
-          </div>
-        </form>
-
-        <section class="result-panel" aria-live="polite" aria-atomic="true">
-          <div class="section-heading">
-            <p class="eyebrow">Schedule</p>
-            <h2 id="buprenorphineResultTitle">30-59 mg MEDD</h2>
-          </div>
-
-          <div class="schedule-summary">
-            <div>
-              <span class="summary-label">Product</span>
-              <strong id="buprenorphineProduct">Belbuca (buprenorphine buccal film)</strong>
+        <section class="buprenorphine-layout compact-section-body">
+          <form class="calculator-panel" id="buprenorphineForm">
+            <div class="field-grid">
+              <label for="buprenorphineMeddRange">
+                Current MEDD range and product
+                <select id="buprenorphineMeddRange" name="buprenorphineMeddRange"></select>
+                <span class="field-hint">Belbuca covers 30-160 mg MEDD; Suboxone covers 161-300 mg MEDD.</span>
+              </label>
             </div>
-            <div>
-              <span class="summary-label">Full agonist plan</span>
-              <strong id="buprenorphineContinueSummary">Continue full agonist opioids while titrating.</strong>
-            </div>
-            <div>
-              <span class="summary-label">Stop point</span>
-              <strong id="buprenorphineStopSummary">Stop full agonist opioids.</strong>
-            </div>
-            <div>
-              <span class="summary-label">Buprenorphine endpoint</span>
-              <strong id="buprenorphineEndpoint">450 mcg BID (900 mcg TDD)</strong>
-            </div>
-          </div>
 
-          <div class="table-wrap schedule-table-wrap">
-            <table class="schedule-table">
-              <thead>
-                <tr>
-                  <th scope="col">Day</th>
-                  <th scope="col">Full agonist opioids</th>
-                  <th scope="col">Buprenorphine product</th>
-                </tr>
-              </thead>
-              <tbody id="buprenorphineScheduleTable"></tbody>
-            </table>
-          </div>
+            <p class="basis-note">
+              Select the current MEDD range to view the corresponding buprenorphine
+              product schedule. Stabilize earlier if pain and withdrawal are
+              controlled.
+            </p>
 
-          <div class="clinical-notes">
-            <h3>Buprenorphine transition cautions</h3>
-            <ul>
-              <li>Confirm the MEDD range, diagnosis, formulation access, and payer constraints before using this schedule.</li>
-              <li>Belbuca and Suboxone both contain buprenorphine, but they are different formulations with different dose units and administration routes.</li>
-              <li>Monitor for withdrawal, oversedation, respiratory depression, worsening pain, and adherence during cross-titration.</li>
-              <li>For MEDD above 300 mg/day or unstable patients, consult pain, palliative care, or addiction medicine.</li>
-            </ul>
-          </div>
+            <div class="button-row">
+              <button type="button" id="buprenorphineCalculateButton">
+                Show schedule
+              </button>
+            </div>
+          </form>
+
+          <section class="result-panel" aria-live="polite" aria-atomic="true">
+            <div class="section-heading">
+              <p class="eyebrow">Schedule</p>
+              <h2 id="buprenorphineResultTitle">30-59 mg MEDD</h2>
+            </div>
+
+            <div class="schedule-summary">
+              <div>
+                <span class="summary-label">Product</span>
+                <strong id="buprenorphineProduct">Belbuca (buprenorphine buccal film)</strong>
+              </div>
+              <div>
+                <span class="summary-label">Full agonist plan</span>
+                <strong id="buprenorphineContinueSummary">Continue full agonist opioids while titrating.</strong>
+              </div>
+              <div>
+                <span class="summary-label">Stop point</span>
+                <strong id="buprenorphineStopSummary">Stop full agonist opioids.</strong>
+              </div>
+              <div>
+                <span class="summary-label">Buprenorphine endpoint</span>
+                <strong id="buprenorphineEndpoint">450 mcg BID (900 mcg TDD)</strong>
+              </div>
+            </div>
+
+            <div class="table-wrap schedule-table-wrap">
+              <table class="schedule-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Day</th>
+                    <th scope="col">Full agonist opioids</th>
+                    <th scope="col">Buprenorphine product</th>
+                  </tr>
+                </thead>
+                <tbody id="buprenorphineScheduleTable"></tbody>
+              </table>
+            </div>
+
+            <div class="clinical-notes">
+              <h3>Buprenorphine transition cautions</h3>
+              <ul>
+                <li>Confirm the MEDD range, diagnosis, formulation access, and payer constraints before using this schedule.</li>
+                <li>Belbuca and Suboxone both contain buprenorphine, but they are different formulations with different dose units and administration routes.</li>
+                <li>Monitor for withdrawal, oversedation, respiratory depression, worsening pain, and adherence during cross-titration.</li>
+                <li>For MEDD above 300 mg/day or unstable patients, consult pain, palliative care, or addiction medicine.</li>
+              </ul>
+            </div>
+          </section>
         </section>
-      </section>
+      </details>
 
       <details class="compact-section" aria-label="Conversion reference">
         <summary>
@@ -472,6 +478,6 @@
       </p>
     </footer>
 
-    <script src="script.js?v=20260417-suboxone-day5-update"></script>
+    <script src="script.js?v=20260417-compact-buprenorphine-section"></script>
   </body>
 </html>
