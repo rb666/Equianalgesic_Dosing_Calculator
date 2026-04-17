@@ -338,14 +338,18 @@ const buprenorphineSchedules = [
     title: "161-300 mg MEDD",
     product: "Suboxone (buprenorphine/naloxone 2 mg/0.5 mg film)",
     fullAgonistSummary:
-      "Continue the full agonist full dose on days 1-3, reduce to 2/3 dose on day 4, then stop on day 5.",
-    stopSummary: "Stop full agonist opioids on day 5.",
+      "Continue the full agonist full dose on days 1-3, reduce to 2/3 dose on day 4, then none or minimal usage with slow titration on day 5.",
+    stopSummary: "Day 5: none or minimal usage with slow titration.",
     days: [
       { day: "1", fullAgonist: "Full dose", buprenorphine: "0.5 mg twice a day (1/4 film)" },
       { day: "2", fullAgonist: "Full dose", buprenorphine: "1 mg twice a day (1/2 film)" },
       { day: "3", fullAgonist: "Full dose", buprenorphine: "1 mg three times a day (1/2 film)" },
       { day: "4", fullAgonist: "2/3 dose", buprenorphine: "1 film (2 mg) three times a day" },
-      { day: "5", fullAgonist: "None", buprenorphine: "2 films (4 mg) three times a day" },
+      {
+        day: "5",
+        fullAgonist: "None OR minimal usage with slow titration",
+        buprenorphine: "1 film (2 mg) three times per day",
+      },
     ],
   },
 ];
@@ -766,7 +770,7 @@ const renderBuprenorphineSchedule = () => {
     .map((item) => {
       let actionClass = "continue-action";
 
-      if (item.fullAgonist === "STOP" || item.fullAgonist === "None") {
+      if (item.fullAgonist === "STOP" || item.fullAgonist.includes("None")) {
         actionClass = "stop-action";
       } else if (item.fullAgonist.includes("2/3")) {
         actionClass = "taper-action";
