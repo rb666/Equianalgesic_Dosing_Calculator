@@ -251,6 +251,7 @@ const methadoneForm = document.querySelector("#methadoneForm");
 const methadoneMorphineDoseInput = document.querySelector("#methadoneMorphineDose");
 const methadoneReductionRange = document.querySelector("#methadoneReductionRange");
 const methadoneReductionNumber = document.querySelector("#methadoneReductionNumber");
+const methadoneCalculateButton = document.querySelector("#methadoneCalculateButton");
 const methadoneFinalDose = document.querySelector("#methadoneFinalDose");
 const methadoneSentence = document.querySelector("#methadoneSentence");
 const methadoneRatioOutput = document.querySelector("#methadoneRatio");
@@ -529,6 +530,10 @@ form.addEventListener("submit", (event) => {
 
 methadoneForm.addEventListener("submit", (event) => {
   event.preventDefault();
+  calculateMethadone();
+});
+
+methadoneCalculateButton.addEventListener("click", () => {
   calculateMethadone();
 });
 
