@@ -1,8 +1,8 @@
 # Equianalgesic Dose Calculator
 
-Static clinical decision support website for converting between common opioid
-equianalgesic doses. The site is designed for GitHub Pages and has no build
-step.
+Static clinical decision support website for converting between opioid
+equianalgesic doses and calculating oral morphine equivalents. The site is
+designed for GitHub Pages and has no build step.
 
 ## Files
 

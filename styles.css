@@ -187,6 +187,16 @@ label,
   font-weight: 750;
 }
 
+.field-hint {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.is-hidden {
+  display: none !important;
+}
+
 select,
 input[type="number"] {
   width: 100%;
@@ -357,7 +367,7 @@ dd {
 
 table {
   width: 100%;
-  min-width: 620px;
+  min-width: 780px;
   border-collapse: collapse;
 }
 

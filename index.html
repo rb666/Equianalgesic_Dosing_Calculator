@@ -17,8 +17,8 @@
         <p class="eyebrow">Clinical decision support</p>
         <h1>Equianalgesic Dose Calculator</h1>
         <p>
-          Convert between common morphine, oxycodone, and hydromorphone routes
-          using a 10 mg IV morphine reference point.
+          Convert supported opioid doses or calculate oral morphine equivalent
+          using clinician-selected reference values.
         </p>
       </div>
       <img
@@ -40,8 +40,8 @@
         </div>
         <p>
           Verify opioid tolerance, indication, organ function, sedation risk,
-          concomitant CNS depressants, formulation constraints, and monitoring
-          before prescribing.
+          concomitant CNS depressants, formulation constraints, transdermal
+          product rules, and monitoring before prescribing.
         </p>
       </section>
 
@@ -53,31 +53,40 @@
           </div>
 
           <div class="field-grid">
+            <label for="calculationMode">
+              Calculation mode
+              <select id="calculationMode" name="calculationMode">
+                <option value="convert">Convert to target opioid</option>
+                <option value="mme">Calculate MME only</option>
+              </select>
+            </label>
+
             <label for="currentDrug">
               Current drug and route
               <select id="currentDrug" name="currentDrug"></select>
             </label>
 
             <label for="currentDose">
-              Dose to convert, mg
+              <span id="currentDoseLabel">Dose to convert</span>
               <input
                 id="currentDose"
                 name="currentDose"
                 type="number"
                 min="0"
-                step="0.01"
+                step="0.001"
                 inputmode="decimal"
                 value="10"
                 required
               />
+              <span class="field-hint" id="currentDoseHint">mg</span>
             </label>
 
-            <label for="targetDrug">
+            <label for="targetDrug" id="targetField">
               Target drug and route
               <select id="targetDrug" name="targetDrug"></select>
             </label>
 
-            <div class="slider-group">
+            <div class="slider-group" id="reductionField">
               <div class="slider-header">
                 <label for="reductionRange">Cross-tolerance reduction</label>
                 <div class="percent-input">
@@ -112,14 +121,18 @@
           </div>
 
           <p class="basis-note">
-            Enter a single dose or a 24-hour total. Interpret the output on the
-            same basis.
+            Enter a single dose or a 24-hour total and interpret output on the
+            same basis. For MME reporting, use 24-hour totals. Patch entries use
+            the selected patch strength and number of patches.
           </p>
 
           <div class="button-row">
             <button type="submit">Calculate</button>
             <button class="secondary-button" type="button" id="exampleButton">
               Load IV hydromorphone example
+            </button>
+            <button class="secondary-button" type="button" id="mmeExampleButton">
+              Load patch MME example
             </button>
           </div>
         </form>
@@ -141,14 +154,18 @@
 
           <dl class="calculation-steps">
             <div>
+              <dt>Oral morphine equivalent</dt>
+              <dd id="oralMorphineEquivalent">83.33 mg</dd>
+            </div>
+            <div>
               <dt>IV morphine equivalent</dt>
               <dd id="ivMorphineEquivalent">66.67 mg</dd>
             </div>
             <div>
-              <dt>Raw target dose</dt>
+              <dt id="targetStepLabel">Raw target dose</dt>
               <dd id="rawTargetDose">133.33 mg</dd>
             </div>
-            <div>
+            <div id="reductionStep">
               <dt>Reduction applied</dt>
               <dd id="reductionApplied">25% reduction</dd>
             </div>
@@ -158,7 +175,8 @@
             <h3>Before ordering</h3>
             <ul>
               <li>Use extra caution for older, frail, opioid-naive, or unstable patients.</li>
-              <li>Do not use this tool for methadone, fentanyl patches, buprenorphine, or PCA settings.</li>
+              <li>Patch entries are MME estimates only; do not use this tool to initiate or titrate patches.</li>
+              <li>Meperidine, tramadol, tapentadol, fentanyl, and buprenorphine conversions vary by source and clinical setting.</li>
               <li>Reassess analgesia, respiratory rate, sedation, and adverse effects after conversion.</li>
             </ul>
           </div>
@@ -177,7 +195,9 @@
               <tr>
                 <th scope="col">Medication</th>
                 <th scope="col">Route</th>
-                <th scope="col">Dose equal to 10 mg IV morphine</th>
+                <th scope="col">Reference dose</th>
+                <th scope="col">Oral morphine equivalent</th>
+                <th scope="col">Use</th>
               </tr>
             </thead>
             <tbody id="referenceTable"></tbody>
@@ -185,9 +205,11 @@
         </div>
 
         <p class="reference-copy">
-          Defaults reflect common equianalgesic table values. Equivalence varies
-          by patient, setting, opioid exposure, and source table. Review the
-          linked references and local policy before clinical use.
+          Values reflect the local reference table configured in this tool.
+          Oral morphine is set to 25 mg per 10 mg IV morphine. For entries
+          supplied as oral morphine equivalents, IV morphine equivalent is
+          derived from that updated morphine setting. Equivalence varies by
+          patient, setting, opioid exposure, and source table.
         </p>
         <ul class="source-links">
           <li>
@@ -206,6 +228,15 @@
               rel="noreferrer"
             >
               UCSF Hospital Handbook: Pain Management
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://www.cdc.gov/mmwr/volumes/71/rr/rr7103a1.htm"
+              target="_blank"
+              rel="noreferrer"
+            >
+              CDC 2022 Opioid Prescribing Guideline: MME cautions
             </a>
           </li>
         </ul>
