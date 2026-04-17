@@ -316,6 +316,79 @@
         </section>
       </section>
 
+      <section class="buprenorphine-layout" aria-label="Buccal buprenorphine transition tool">
+        <form class="calculator-panel" id="buprenorphineForm">
+          <div class="section-heading">
+            <p class="eyebrow">Buccal buprenorphine</p>
+            <h2>MEDD-based cross-titration schedule</h2>
+          </div>
+
+          <div class="field-grid">
+            <label for="buprenorphineMeddRange">
+              Current MEDD range
+              <select id="buprenorphineMeddRange" name="buprenorphineMeddRange"></select>
+              <span class="field-hint">MEDD, morphine equivalent daily dose.</span>
+            </label>
+          </div>
+
+          <p class="basis-note">
+            This schedule applies the selected MEDD range from the VA buccal
+            buprenorphine cross-titration example. Stabilize earlier if pain and
+            withdrawal are controlled.
+          </p>
+
+          <div class="button-row">
+            <button type="button" id="buprenorphineCalculateButton">
+              Show schedule
+            </button>
+          </div>
+        </form>
+
+        <section class="result-panel" aria-live="polite" aria-atomic="true">
+          <div class="section-heading">
+            <p class="eyebrow">Schedule</p>
+            <h2 id="buprenorphineResultTitle">30-59 mg MEDD</h2>
+          </div>
+
+          <div class="schedule-summary">
+            <div>
+              <span class="summary-label">Days 1-4</span>
+              <strong id="buprenorphineContinueSummary">Continue full agonist opioids while titrating.</strong>
+            </div>
+            <div>
+              <span class="summary-label">Day 5+</span>
+              <strong id="buprenorphineStopSummary">Stop full agonist opioids.</strong>
+            </div>
+            <div>
+              <span class="summary-label">Buccal buprenorphine endpoint</span>
+              <strong id="buprenorphineEndpoint">450 mcg BID (900 mcg TDD)</strong>
+            </div>
+          </div>
+
+          <div class="table-wrap schedule-table-wrap">
+            <table class="schedule-table">
+              <thead>
+                <tr>
+                  <th scope="col">Day</th>
+                  <th scope="col">Full agonist opioids</th>
+                  <th scope="col">Buccal buprenorphine</th>
+                </tr>
+              </thead>
+              <tbody id="buprenorphineScheduleTable"></tbody>
+            </table>
+          </div>
+
+          <div class="clinical-notes">
+            <h3>Buprenorphine transition cautions</h3>
+            <ul>
+              <li>Confirm the MEDD range, diagnosis, formulation access, and payer constraints before using this schedule.</li>
+              <li>Monitor for withdrawal, oversedation, respiratory depression, worsening pain, and adherence during cross-titration.</li>
+              <li>For MEDD above 160 mg/day or unstable patients, consult pain, palliative care, or addiction medicine.</li>
+            </ul>
+          </div>
+        </section>
+      </section>
+
       <section class="reference-section" aria-label="Conversion reference">
         <div class="section-heading">
           <p class="eyebrow">Reference</p>
@@ -372,6 +445,15 @@
               CDC 2022 Opioid Prescribing Guideline: MME cautions
             </a>
           </li>
+          <li>
+            <a
+              href="https://www.pbm.va.gov/PBM/AcademicDetailingService/Documents/508/10-1548_Opioid-Deprescribing-Discussion-Tool_508Ready.pdf"
+              target="_blank"
+              rel="noreferrer"
+            >
+              VA Opioid Deprescribing Discussion Tool: buccal buprenorphine schedules
+            </a>
+          </li>
         </ul>
 
         <div class="section-heading methadone-reference-heading">
@@ -404,6 +486,6 @@
       </p>
     </footer>
 
-    <script src="script.js?v=20260416-iv-methadone-route"></script>
+    <script src="script.js?v=20260416-buccal-bup-schedule"></script>
   </body>
 </html>

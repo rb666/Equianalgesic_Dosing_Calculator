@@ -149,7 +149,8 @@ main {
 }
 
 .calculator-layout,
-.methadone-layout {
+.methadone-layout,
+.buprenorphine-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.95fr);
   gap: 24px;
@@ -357,6 +358,55 @@ dd {
   margin: 8px 0;
 }
 
+.schedule-summary {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.schedule-summary div {
+  display: grid;
+  gap: 4px;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+
+.schedule-summary div:last-child {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 12px;
+}
+
+.summary-label {
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.schedule-table-wrap {
+  margin-top: 8px;
+}
+
+.schedule-table {
+  min-width: 560px;
+}
+
+.schedule-table td:last-child,
+.schedule-table th:last-child {
+  text-align: left;
+}
+
+.continue-action {
+  color: var(--accent-dark);
+  font-weight: 850;
+}
+
+.stop-action {
+  color: var(--warning);
+  font-weight: 900;
+}
+
 .reference-section {
   margin: 24px 0 34px;
   padding: 24px;
@@ -415,7 +465,8 @@ footer p {
   .site-header,
   .safety-banner,
   .calculator-layout,
-  .methadone-layout {
+  .methadone-layout,
+  .buprenorphine-layout {
     grid-template-columns: 1fr;
   }
 

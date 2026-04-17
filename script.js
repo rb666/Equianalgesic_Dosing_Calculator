@@ -222,6 +222,73 @@ const methadoneRatioTable = [
   },
 ];
 
+const buprenorphineSchedules = [
+  {
+    id: "30_59",
+    label: "30-59 mg MEDD",
+    days: [
+      { day: "1", fullAgonist: "Continue", buprenorphine: "150 mcg BID (300 mcg TDD)" },
+      { day: "2", fullAgonist: "Continue", buprenorphine: "300 mcg BID (600 mcg TDD)" },
+      { day: "3", fullAgonist: "Continue", buprenorphine: "450 mcg BID (900 mcg TDD)" },
+      { day: "4", fullAgonist: "Continue", buprenorphine: "450 mcg BID (900 mcg TDD)" },
+      { day: "5+", fullAgonist: "STOP", buprenorphine: "450 mcg BID (900 mcg TDD)" },
+    ],
+  },
+  {
+    id: "60_89",
+    label: "60-89 mg MEDD",
+    days: [
+      { day: "1", fullAgonist: "Continue", buprenorphine: "150 mcg BID (300 mcg TDD)" },
+      { day: "2", fullAgonist: "Continue", buprenorphine: "300 mcg BID (600 mcg TDD)" },
+      { day: "3", fullAgonist: "Continue", buprenorphine: "450 mcg BID (900 mcg TDD)" },
+      { day: "4", fullAgonist: "Continue", buprenorphine: "600 mcg BID (1200 mcg TDD)" },
+      { day: "5+", fullAgonist: "STOP", buprenorphine: "600 mcg BID (1200 mcg TDD)" },
+    ],
+  },
+  {
+    id: "90_120",
+    label: "90-120 mg MEDD",
+    days: [
+      { day: "1", fullAgonist: "Continue", buprenorphine: "300 mcg BID (600 mcg TDD)" },
+      {
+        day: "2",
+        fullAgonist: "Continue",
+        buprenorphine: "300 mcg QAM + 600 mcg QPM (900 mcg TDD)",
+      },
+      { day: "3", fullAgonist: "Continue", buprenorphine: "600 mcg BID (1200 mcg TDD)" },
+      {
+        day: "4",
+        fullAgonist: "Continue",
+        buprenorphine: "600 mcg QAM + 900 mcg QPM (1500 mcg TDD)",
+      },
+      {
+        day: "5+",
+        fullAgonist: "STOP",
+        buprenorphine: "600 mcg QAM + 900 mcg QPM (1500 mcg TDD)",
+      },
+    ],
+  },
+  {
+    id: "121_160",
+    label: "121-160 mg MEDD",
+    days: [
+      { day: "1", fullAgonist: "Continue", buprenorphine: "300 mcg BID (600 mcg TDD)" },
+      {
+        day: "2",
+        fullAgonist: "Continue",
+        buprenorphine: "300 mcg QAM + 600 mcg QPM (900 mcg TDD)",
+      },
+      { day: "3", fullAgonist: "Continue", buprenorphine: "600 mcg BID (1200 mcg TDD)" },
+      {
+        day: "4",
+        fullAgonist: "Continue",
+        buprenorphine: "600 mcg QAM + 900 mcg QPM (1500 mcg TDD)",
+      },
+      { day: "5+", fullAgonist: "STOP", buprenorphine: "900 mcg BID (1800 mcg TDD)" },
+    ],
+  },
+];
+
 const form = document.querySelector("#calculatorForm");
 const calculationModeSelect = document.querySelector("#calculationMode");
 const currentDrugSelect = document.querySelector("#currentDrug");
@@ -267,6 +334,22 @@ const methadoneReductionAppliedOutput = document.querySelector(
 const methadoneQ8DoseOutput = document.querySelector("#methadoneQ8Dose");
 const methadoneQ12DoseOutput = document.querySelector("#methadoneQ12Dose");
 const methadoneRatioTableBody = document.querySelector("#methadoneRatioTable");
+const buprenorphineForm = document.querySelector("#buprenorphineForm");
+const buprenorphineMeddRangeSelect = document.querySelector(
+  "#buprenorphineMeddRange",
+);
+const buprenorphineCalculateButton = document.querySelector(
+  "#buprenorphineCalculateButton",
+);
+const buprenorphineResultTitle = document.querySelector("#buprenorphineResultTitle");
+const buprenorphineContinueSummary = document.querySelector(
+  "#buprenorphineContinueSummary",
+);
+const buprenorphineStopSummary = document.querySelector("#buprenorphineStopSummary");
+const buprenorphineEndpoint = document.querySelector("#buprenorphineEndpoint");
+const buprenorphineScheduleTableBody = document.querySelector(
+  "#buprenorphineScheduleTable",
+);
 
 const formatDose = (value) => {
   if (!Number.isFinite(value)) {
@@ -353,6 +436,12 @@ const renderMethadoneRatioTable = () => {
     .join("");
 };
 
+const renderBuprenorphineOptions = () => {
+  buprenorphineMeddRangeSelect.innerHTML = buprenorphineSchedules
+    .map((item) => `<option value="${item.id}">${item.label}</option>`)
+    .join("");
+};
+
 const clampReduction = (value) => Math.min(75, Math.max(0, Number(value) || 0));
 
 const clampMethadoneReduction = (value) =>
@@ -402,6 +491,11 @@ const getMethadoneRoute = () => {
     adjustmentLabel: "Oral route: no adjustment",
   };
 };
+
+const getBuprenorphineSchedule = () =>
+  buprenorphineSchedules.find(
+    (item) => item.id === buprenorphineMeddRangeSelect.value,
+  ) || buprenorphineSchedules[0];
 
 const setModeVisibility = () => {
   const isMMeMode = calculationModeSelect.value === "mme";
@@ -553,6 +647,32 @@ const calculateMethadone = () => {
     ` and ${route.label} route adjustment.`;
 };
 
+const renderBuprenorphineSchedule = () => {
+  const schedule = getBuprenorphineSchedule();
+  const endpoint = schedule.days[schedule.days.length - 1];
+
+  buprenorphineResultTitle.textContent = schedule.label;
+  buprenorphineContinueSummary.textContent =
+    "Continue full agonist opioids during days 1-4 while buccal buprenorphine is increased.";
+  buprenorphineStopSummary.textContent =
+    `Stop full agonist opioids on day ${endpoint.day}.`;
+  buprenorphineEndpoint.textContent = endpoint.buprenorphine;
+  buprenorphineScheduleTableBody.innerHTML = schedule.days
+    .map((item) => {
+      const actionClass =
+        item.fullAgonist === "STOP" ? "stop-action" : "continue-action";
+
+      return `
+        <tr>
+          <td>${item.day}</td>
+          <td class="${actionClass}">${item.fullAgonist}</td>
+          <td>${item.buprenorphine}</td>
+        </tr>
+      `;
+    })
+    .join("");
+};
+
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   calculate();
@@ -563,8 +683,17 @@ methadoneForm.addEventListener("submit", (event) => {
   calculateMethadone();
 });
 
+buprenorphineForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  renderBuprenorphineSchedule();
+});
+
 methadoneCalculateButton.addEventListener("click", () => {
   calculateMethadone();
+});
+
+buprenorphineCalculateButton.addEventListener("click", () => {
+  renderBuprenorphineSchedule();
 });
 
 [
@@ -606,6 +735,10 @@ methadoneCalculateButton.addEventListener("click", () => {
   });
 });
 
+buprenorphineMeddRangeSelect.addEventListener("input", () => {
+  renderBuprenorphineSchedule();
+});
+
 exampleButton.addEventListener("click", () => {
   calculationModeSelect.value = "convert";
   currentDrugSelect.value = "Hydromorphone_IV";
@@ -626,5 +759,7 @@ mmeExampleButton.addEventListener("click", () => {
 renderOptions();
 renderReferenceTable();
 renderMethadoneRatioTable();
+renderBuprenorphineOptions();
 calculate();
 calculateMethadone();
+renderBuprenorphineSchedule();
