@@ -351,7 +351,7 @@ const renderMethadoneRatioTable = () => {
 const clampReduction = (value) => Math.min(75, Math.max(0, Number(value) || 0));
 
 const clampMethadoneReduction = (value) =>
-  Math.min(90, Math.max(75, Number(value) || 75));
+  Math.min(90, Math.max(0, Number(value) || 0));
 
 const syncReduction = (source) => {
   const value = clampReduction(source.value);
