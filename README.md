@@ -2,8 +2,8 @@
 
 Static clinical decision support website for converting between opioid
 equianalgesic doses, calculating oral morphine equivalents, and estimating
-oral methadone conversion from a 24-hour oral morphine equivalent total. The
-site is designed for GitHub Pages and has no build step.
+oral or IV methadone conversion from a 24-hour oral morphine equivalent total.
+The site is designed for GitHub Pages and has no build step.
 
 ## Files
 

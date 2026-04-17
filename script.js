@@ -249,13 +249,18 @@ const reductionStep = document.querySelector("#reductionStep");
 const reductionAppliedOutput = document.querySelector("#reductionApplied");
 const methadoneForm = document.querySelector("#methadoneForm");
 const methadoneMorphineDoseInput = document.querySelector("#methadoneMorphineDose");
+const methadoneRouteSelect = document.querySelector("#methadoneRoute");
 const methadoneReductionRange = document.querySelector("#methadoneReductionRange");
 const methadoneReductionNumber = document.querySelector("#methadoneReductionNumber");
 const methadoneCalculateButton = document.querySelector("#methadoneCalculateButton");
 const methadoneFinalDose = document.querySelector("#methadoneFinalDose");
+const methadoneFinalUnit = document.querySelector("#methadoneFinalUnit");
 const methadoneSentence = document.querySelector("#methadoneSentence");
 const methadoneRatioOutput = document.querySelector("#methadoneRatio");
 const methadoneRawDoseOutput = document.querySelector("#methadoneRawDose");
+const methadoneRouteAdjustmentOutput = document.querySelector(
+  "#methadoneRouteAdjustment",
+);
 const methadoneReductionAppliedOutput = document.querySelector(
   "#methadoneReductionApplied",
 );
@@ -380,6 +385,24 @@ const getMethadoneBracket = (oralMorphineDaily) =>
   methadoneRatioTable.find((item) => oralMorphineDaily <= item.max) ||
   methadoneRatioTable[methadoneRatioTable.length - 1];
 
+const getMethadoneRoute = () => {
+  if (methadoneRouteSelect.value === "iv") {
+    return {
+      label: "IV methadone",
+      unitLabel: "mg/day IV",
+      factor: 0.5,
+      adjustmentLabel: "IV route: 50% of oral estimate",
+    };
+  }
+
+  return {
+    label: "oral methadone",
+    unitLabel: "mg/day oral",
+    factor: 1,
+    adjustmentLabel: "Oral route: no adjustment",
+  };
+};
+
 const setModeVisibility = () => {
   const isMMeMode = calculationModeSelect.value === "mme";
   targetField.classList.toggle("is-hidden", isMMeMode);
@@ -495,10 +518,12 @@ const calculateMethadone = () => {
     oralMorphineDaily < 0
   ) {
     methadoneFinalDose.textContent = "0";
+    methadoneFinalUnit.textContent = getMethadoneRoute().unitLabel;
     methadoneSentence.textContent =
       "Enter a non-negative 24-hour oral morphine equivalent dose.";
     methadoneRatioOutput.textContent = "Not applied";
     methadoneRawDoseOutput.textContent = "0 mg/day";
+    methadoneRouteAdjustmentOutput.textContent = "Not applied";
     methadoneReductionAppliedOutput.textContent = `${reductionPercentage}% reduction`;
     methadoneQ8DoseOutput.textContent = "0 mg/dose";
     methadoneQ12DoseOutput.textContent = "0 mg/dose";
@@ -506,21 +531,26 @@ const calculateMethadone = () => {
   }
 
   const bracket = getMethadoneBracket(oralMorphineDaily);
-  const rawMethadoneDaily = oralMorphineDaily / bracket.ratio;
-  const reducedMethadoneDaily =
-    rawMethadoneDaily * (1 - reductionPercentage / 100);
+  const route = getMethadoneRoute();
+  const rawOralMethadoneDaily = oralMorphineDaily / bracket.ratio;
+  const reducedOralMethadoneDaily =
+    rawOralMethadoneDaily * (1 - reductionPercentage / 100);
+  const reducedMethadoneDaily = reducedOralMethadoneDaily * route.factor;
   const q8Dose = reducedMethadoneDaily / 3;
   const q12Dose = reducedMethadoneDaily / 2;
 
   methadoneFinalDose.textContent = formatDose(reducedMethadoneDaily);
+  methadoneFinalUnit.textContent = route.unitLabel;
   methadoneRatioOutput.textContent = `${bracket.ratio}:1`;
-  methadoneRawDoseOutput.textContent = `${formatDose(rawMethadoneDaily)} mg/day`;
+  methadoneRawDoseOutput.textContent = `${formatDose(rawOralMethadoneDaily)} mg/day`;
+  methadoneRouteAdjustmentOutput.textContent = route.adjustmentLabel;
   methadoneReductionAppliedOutput.textContent = `${reductionPercentage}% reduction`;
   methadoneQ8DoseOutput.textContent = `${formatDose(q8Dose)} mg/dose`;
   methadoneQ12DoseOutput.textContent = `${formatDose(q12Dose)} mg/dose`;
   methadoneSentence.textContent =
     `${formatDose(oralMorphineDaily)} mg/day oral morphine equivalent uses the ` +
-    `${bracket.ratio}:1 morphine:methadone ratio before the selected safety reduction.`;
+    `${bracket.ratio}:1 morphine:oral methadone ratio before the selected safety reduction` +
+    ` and ${route.label} route adjustment.`;
 };
 
 form.addEventListener("submit", (event) => {
@@ -560,6 +590,7 @@ methadoneCalculateButton.addEventListener("click", () => {
 
 [
   methadoneMorphineDoseInput,
+  methadoneRouteSelect,
   methadoneReductionRange,
   methadoneReductionNumber,
 ].forEach((control) => {

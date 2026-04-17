@@ -187,7 +187,7 @@
         <form class="calculator-panel" id="methadoneForm">
           <div class="section-heading">
             <p class="eyebrow">Methadone</p>
-            <h2>Oral morphine to oral methadone</h2>
+            <h2>Oral morphine to methadone</h2>
           </div>
 
           <div class="field-grid">
@@ -204,6 +204,15 @@
                 required
               />
               <span class="field-hint">mg/day OME</span>
+            </label>
+
+            <label for="methadoneRoute">
+              Target methadone route
+              <select id="methadoneRoute" name="methadoneRoute">
+                <option value="oral">Oral methadone</option>
+                <option value="iv">IV methadone</option>
+              </select>
+              <span class="field-hint">IV methadone is calculated as 50% of the oral methadone estimate.</span>
             </label>
 
             <div class="slider-group">
@@ -276,6 +285,10 @@
             <div>
               <dt>Raw oral methadone</dt>
               <dd id="methadoneRawDose">12.5 mg/day</dd>
+            </div>
+            <div>
+              <dt>Route adjustment</dt>
+              <dd id="methadoneRouteAdjustment">Oral route</dd>
             </div>
             <div>
               <dt>Reduction applied</dt>
@@ -377,8 +390,9 @@
           </table>
         </div>
         <p class="reference-copy">
-          Methadone conversion uses nonlinear oral morphine:methadone ratios and
-          then applies the selected 0% to 90% additional reduction.
+          Methadone conversion uses nonlinear oral morphine:oral methadone
+          ratios, applies the selected 0% to 90% additional reduction, and uses
+          50% of the oral methadone estimate for IV methadone.
         </p>
       </section>
     </main>
@@ -390,6 +404,6 @@
       </p>
     </footer>
 
-    <script src="script.js?v=20260416-methadone-range-0-90"></script>
+    <script src="script.js?v=20260416-iv-methadone-route"></script>
   </body>
 </html>
