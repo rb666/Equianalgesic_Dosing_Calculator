@@ -1,4 +1,9 @@
 const ORAL_MORPHINE_FOR_TEN_MG_IV_MORPHINE = 25;
+const METHADONE_ORAL_REFERENCE_DOSE = 10;
+const METHADONE_ORAL_MORPHINE_FACTOR = 4.7;
+const METHADONE_ORAL_REFERENCE_OME =
+  METHADONE_ORAL_REFERENCE_DOSE * METHADONE_ORAL_MORPHINE_FACTOR;
+const METHADONE_IV_REFERENCE_DOSE = METHADONE_ORAL_REFERENCE_DOSE / 2;
 
 const conversionOptions = [
   {
@@ -49,6 +54,26 @@ const conversionOptions = [
     doseUnit: "mg",
     oralMorphineEquivalent: 25,
     label: "Hydromorphone oral",
+    targetable: true,
+  },
+  {
+    id: "Methadone_Oral",
+    medication: "Methadone",
+    route: "Oral",
+    referenceDose: METHADONE_ORAL_REFERENCE_DOSE,
+    doseUnit: "mg",
+    oralMorphineEquivalent: METHADONE_ORAL_REFERENCE_OME,
+    label: "Methadone oral",
+    targetable: true,
+  },
+  {
+    id: "Methadone_IV",
+    medication: "Methadone",
+    route: "IV",
+    referenceDose: METHADONE_IV_REFERENCE_DOSE,
+    doseUnit: "mg",
+    oralMorphineEquivalent: METHADONE_ORAL_REFERENCE_OME,
+    label: "Methadone IV",
     targetable: true,
   },
   {
@@ -409,6 +434,54 @@ const findOption = (id) => conversionOptions.find((item) => item.id === id);
 const optionMarkup = (item) =>
   `<option value="${item.id}">${item.label}</option>`;
 
+const isMethadoneOption = (option) => option?.medication === "Methadone";
+
+const getTargetOptions = (currentOption) =>
+  conversionOptions.filter((item) => {
+    if (!item.targetable) {
+      return false;
+    }
+
+    return !isMethadoneOption(item) || isMethadoneOption(currentOption);
+  });
+
+const renderTargetOptions = (preferredValue = targetDrugSelect.value) => {
+  const currentOption = findOption(currentDrugSelect.value);
+  const targetOptions = getTargetOptions(currentOption);
+  const hasOption = (id) => targetOptions.some((item) => item.id === id);
+
+  targetDrugSelect.innerHTML = targetOptions.map(optionMarkup).join("");
+
+  if (hasOption(preferredValue)) {
+    targetDrugSelect.value = preferredValue;
+    return;
+  }
+
+  if (currentOption?.id === "Methadone_Oral" && hasOption("Methadone_IV")) {
+    targetDrugSelect.value = "Methadone_IV";
+    return;
+  }
+
+  if (currentOption?.id === "Methadone_IV" && hasOption("Methadone_Oral")) {
+    targetDrugSelect.value = "Methadone_Oral";
+    return;
+  }
+
+  targetDrugSelect.value = targetOptions[0]?.id || "";
+};
+
+const getUseDescription = (option) => {
+  if (!option.targetable) {
+    return "Current/MME only";
+  }
+
+  if (isMethadoneOption(option)) {
+    return "Current/MME or methadone route target";
+  }
+
+  return "Current or target";
+};
+
 const getDoseUnitLabel = (option) => {
   if (!option) {
     return "mg";
@@ -436,12 +509,8 @@ const getReferenceDoseDescription = (option) => {
 
 const renderOptions = () => {
   currentDrugSelect.innerHTML = conversionOptions.map(optionMarkup).join("");
-  targetDrugSelect.innerHTML = conversionOptions
-    .filter((item) => item.targetable)
-    .map(optionMarkup)
-    .join("");
   currentDrugSelect.value = "Hydromorphone_IV";
-  targetDrugSelect.value = "Oxycodone_Oral";
+  renderTargetOptions("Oxycodone_Oral");
 };
 
 const renderReferenceTable = () => {
@@ -453,7 +522,7 @@ const renderReferenceTable = () => {
           <td>${item.route}</td>
           <td>${getReferenceDoseDescription(item)}</td>
           <td>${formatDose(item.oralMorphineEquivalent)} mg</td>
-          <td>${item.targetable ? "Current or target" : "Current/MME only"}</td>
+          <td>${getUseDescription(item)}</td>
         </tr>
       `,
     )
@@ -748,6 +817,7 @@ buprenorphineCalculateButton.addEventListener("click", () => {
   control.addEventListener("input", () => {
     if (control === currentDrugSelect) {
       setDefaultCurrentDose();
+      renderTargetOptions();
     }
 
     if (control === reductionRange || control === reductionNumber) {
@@ -783,7 +853,7 @@ buprenorphineMeddRangeSelect.addEventListener("input", () => {
 exampleButton.addEventListener("click", () => {
   calculationModeSelect.value = "convert";
   currentDrugSelect.value = "Hydromorphone_IV";
-  targetDrugSelect.value = "Oxycodone_Oral";
+  renderTargetOptions("Oxycodone_Oral");
   currentDoseInput.value = "10";
   reductionRange.value = "25";
   reductionNumber.value = "25";
@@ -793,6 +863,7 @@ exampleButton.addEventListener("click", () => {
 mmeExampleButton.addEventListener("click", () => {
   calculationModeSelect.value = "mme";
   currentDrugSelect.value = "Buprenorphine_Patch_20";
+  renderTargetOptions();
   currentDoseInput.value = "1";
   calculate();
 });
