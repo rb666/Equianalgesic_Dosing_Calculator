@@ -183,6 +183,45 @@ const conversionOptions = [
   },
 ];
 
+const methadoneRatioTable = [
+  {
+    min: 0,
+    max: 30,
+    label: "0-30 mg/day",
+    ratio: 2,
+  },
+  {
+    min: 31,
+    max: 99,
+    label: "31-99 mg/day",
+    ratio: 4,
+  },
+  {
+    min: 100,
+    max: 299,
+    label: "100-299 mg/day",
+    ratio: 8,
+  },
+  {
+    min: 300,
+    max: 499,
+    label: "300-499 mg/day",
+    ratio: 12,
+  },
+  {
+    min: 500,
+    max: 999,
+    label: "500-999 mg/day",
+    ratio: 15,
+  },
+  {
+    min: 1000,
+    max: Infinity,
+    label: "1000 mg/day or more",
+    ratio: 20,
+  },
+];
+
 const form = document.querySelector("#calculatorForm");
 const calculationModeSelect = document.querySelector("#calculationMode");
 const currentDrugSelect = document.querySelector("#currentDrug");
@@ -208,6 +247,20 @@ const targetStepLabel = document.querySelector("#targetStepLabel");
 const rawTargetDoseOutput = document.querySelector("#rawTargetDose");
 const reductionStep = document.querySelector("#reductionStep");
 const reductionAppliedOutput = document.querySelector("#reductionApplied");
+const methadoneForm = document.querySelector("#methadoneForm");
+const methadoneMorphineDoseInput = document.querySelector("#methadoneMorphineDose");
+const methadoneReductionRange = document.querySelector("#methadoneReductionRange");
+const methadoneReductionNumber = document.querySelector("#methadoneReductionNumber");
+const methadoneFinalDose = document.querySelector("#methadoneFinalDose");
+const methadoneSentence = document.querySelector("#methadoneSentence");
+const methadoneRatioOutput = document.querySelector("#methadoneRatio");
+const methadoneRawDoseOutput = document.querySelector("#methadoneRawDose");
+const methadoneReductionAppliedOutput = document.querySelector(
+  "#methadoneReductionApplied",
+);
+const methadoneQ8DoseOutput = document.querySelector("#methadoneQ8Dose");
+const methadoneQ12DoseOutput = document.querySelector("#methadoneQ12Dose");
+const methadoneRatioTableBody = document.querySelector("#methadoneRatioTable");
 
 const formatDose = (value) => {
   if (!Number.isFinite(value)) {
@@ -281,12 +334,34 @@ const renderReferenceTable = () => {
     .join("");
 };
 
+const renderMethadoneRatioTable = () => {
+  methadoneRatioTableBody.innerHTML = methadoneRatioTable
+    .map(
+      (item) => `
+        <tr>
+          <td>${item.label}</td>
+          <td>${item.ratio}:1</td>
+        </tr>
+      `,
+    )
+    .join("");
+};
+
 const clampReduction = (value) => Math.min(75, Math.max(0, Number(value) || 0));
+
+const clampMethadoneReduction = (value) =>
+  Math.min(90, Math.max(75, Number(value) || 75));
 
 const syncReduction = (source) => {
   const value = clampReduction(source.value);
   reductionRange.value = value;
   reductionNumber.value = value;
+};
+
+const syncMethadoneReduction = (source) => {
+  const value = clampMethadoneReduction(source.value);
+  methadoneReductionRange.value = value;
+  methadoneReductionNumber.value = value;
 };
 
 const getCurrentOralMorphineEquivalent = (currentOption, currentDose) =>
@@ -299,6 +374,10 @@ const getIvMorphineEquivalent = (oralMorphineEquivalent) =>
 const getTargetDose = (targetOption, oralMorphineEquivalent) =>
   (oralMorphineEquivalent / targetOption.oralMorphineEquivalent) *
   targetOption.referenceDose;
+
+const getMethadoneBracket = (oralMorphineDaily) =>
+  methadoneRatioTable.find((item) => oralMorphineDaily <= item.max) ||
+  methadoneRatioTable[methadoneRatioTable.length - 1];
 
 const setModeVisibility = () => {
   const isMMeMode = calculationModeSelect.value === "mme";
@@ -403,9 +482,54 @@ const calculate = () => {
   reductionStep.classList.remove("is-hidden");
 };
 
+const calculateMethadone = () => {
+  const oralMorphineDaily = Number(methadoneMorphineDoseInput.value);
+  const reductionPercentage = clampMethadoneReduction(
+    methadoneReductionNumber.value,
+  );
+
+  if (
+    methadoneMorphineDoseInput.value.trim() === "" ||
+    !Number.isFinite(oralMorphineDaily) ||
+    oralMorphineDaily < 0
+  ) {
+    methadoneFinalDose.textContent = "0";
+    methadoneSentence.textContent =
+      "Enter a non-negative 24-hour oral morphine equivalent dose.";
+    methadoneRatioOutput.textContent = "Not applied";
+    methadoneRawDoseOutput.textContent = "0 mg/day";
+    methadoneReductionAppliedOutput.textContent = `${reductionPercentage}% reduction`;
+    methadoneQ8DoseOutput.textContent = "0 mg/dose";
+    methadoneQ12DoseOutput.textContent = "0 mg/dose";
+    return;
+  }
+
+  const bracket = getMethadoneBracket(oralMorphineDaily);
+  const rawMethadoneDaily = oralMorphineDaily / bracket.ratio;
+  const reducedMethadoneDaily =
+    rawMethadoneDaily * (1 - reductionPercentage / 100);
+  const q8Dose = reducedMethadoneDaily / 3;
+  const q12Dose = reducedMethadoneDaily / 2;
+
+  methadoneFinalDose.textContent = formatDose(reducedMethadoneDaily);
+  methadoneRatioOutput.textContent = `${bracket.ratio}:1`;
+  methadoneRawDoseOutput.textContent = `${formatDose(rawMethadoneDaily)} mg/day`;
+  methadoneReductionAppliedOutput.textContent = `${reductionPercentage}% reduction`;
+  methadoneQ8DoseOutput.textContent = `${formatDose(q8Dose)} mg/dose`;
+  methadoneQ12DoseOutput.textContent = `${formatDose(q12Dose)} mg/dose`;
+  methadoneSentence.textContent =
+    `${formatDose(oralMorphineDaily)} mg/day oral morphine equivalent uses the ` +
+    `${bracket.ratio}:1 morphine:methadone ratio before the selected safety reduction.`;
+};
+
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   calculate();
+});
+
+methadoneForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  calculateMethadone();
 });
 
 [
@@ -429,6 +553,23 @@ form.addEventListener("submit", (event) => {
   });
 });
 
+[
+  methadoneMorphineDoseInput,
+  methadoneReductionRange,
+  methadoneReductionNumber,
+].forEach((control) => {
+  control.addEventListener("input", () => {
+    if (
+      control === methadoneReductionRange ||
+      control === methadoneReductionNumber
+    ) {
+      syncMethadoneReduction(control);
+    }
+
+    calculateMethadone();
+  });
+});
+
 exampleButton.addEventListener("click", () => {
   calculationModeSelect.value = "convert";
   currentDrugSelect.value = "Hydromorphone_IV";
@@ -448,4 +589,6 @@ mmeExampleButton.addEventListener("click", () => {
 
 renderOptions();
 renderReferenceTable();
+renderMethadoneRatioTable();
 calculate();
+calculateMethadone();

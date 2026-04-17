@@ -148,7 +148,8 @@ main {
   margin: 0;
 }
 
-.calculator-layout {
+.calculator-layout,
+.methadone-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.95fr);
   gap: 24px;
@@ -361,6 +362,10 @@ dd {
   padding: 24px;
 }
 
+.methadone-reference-heading {
+  margin-top: 28px;
+}
+
 .table-wrap {
   overflow-x: auto;
 }
@@ -409,7 +414,8 @@ footer p {
 @media (max-width: 850px) {
   .site-header,
   .safety-banner,
-  .calculator-layout {
+  .calculator-layout,
+  .methadone-layout {
     grid-template-columns: 1fr;
   }
 

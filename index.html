@@ -183,6 +183,123 @@
         </section>
       </section>
 
+      <section class="methadone-layout" aria-label="Methadone conversion tool">
+        <form class="calculator-panel" id="methadoneForm">
+          <div class="section-heading">
+            <p class="eyebrow">Methadone</p>
+            <h2>Oral morphine to oral methadone</h2>
+          </div>
+
+          <div class="field-grid">
+            <label for="methadoneMorphineDose">
+              24-hour oral morphine equivalent
+              <input
+                id="methadoneMorphineDose"
+                name="methadoneMorphineDose"
+                type="number"
+                min="0"
+                step="1"
+                inputmode="decimal"
+                value="100"
+                required
+              />
+              <span class="field-hint">mg/day OME</span>
+            </label>
+
+            <div class="slider-group">
+              <div class="slider-header">
+                <label for="methadoneReductionRange">Methadone safety reduction</label>
+                <div class="percent-input">
+                  <input
+                    id="methadoneReductionNumber"
+                    name="methadoneReductionNumber"
+                    type="number"
+                    min="75"
+                    max="90"
+                    step="1"
+                    value="75"
+                  />
+                  <span>%</span>
+                </div>
+              </div>
+              <input
+                id="methadoneReductionRange"
+                name="methadoneReductionRange"
+                type="range"
+                min="75"
+                max="90"
+                step="1"
+                value="75"
+              />
+              <div class="range-labels" aria-hidden="true">
+                <span>75%</span>
+                <span>80%</span>
+                <span>85%</span>
+                <span>90%</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="basis-note">
+            Use a verified 24-hour oral morphine equivalent total. This is not
+            for methadone initiation in opioid use disorder or for opioid-naive
+            patients.
+          </p>
+
+          <div class="button-row">
+            <button type="submit">Calculate methadone</button>
+          </div>
+        </form>
+
+        <section class="result-panel" aria-live="polite" aria-atomic="true">
+          <div class="section-heading">
+            <p class="eyebrow">Methadone result</p>
+            <h2>Conservative starting estimate</h2>
+          </div>
+
+          <div class="dose-result">
+            <span id="methadoneFinalDose">3.13</span>
+            <span id="methadoneFinalUnit">mg/day</span>
+          </div>
+          <p id="methadoneSentence">
+            Apply specialist review, QTc and interaction screening, close
+            monitoring, and local policy before ordering.
+          </p>
+
+          <dl class="calculation-steps">
+            <div>
+              <dt>Morphine:methadone ratio</dt>
+              <dd id="methadoneRatio">8:1</dd>
+            </div>
+            <div>
+              <dt>Raw oral methadone</dt>
+              <dd id="methadoneRawDose">12.5 mg/day</dd>
+            </div>
+            <div>
+              <dt>Reduction applied</dt>
+              <dd id="methadoneReductionApplied">75% reduction</dd>
+            </div>
+            <div>
+              <dt>If divided q8h</dt>
+              <dd id="methadoneQ8Dose">1.04 mg/dose</dd>
+            </div>
+            <div>
+              <dt>If divided q12h</dt>
+              <dd id="methadoneQ12Dose">1.56 mg/dose</dd>
+            </div>
+          </dl>
+
+          <div class="clinical-notes">
+            <h3>Methadone cautions</h3>
+            <ul>
+              <li>Use only with clinician experience or pain/palliative specialist input.</li>
+              <li>Account for long and variable half-life, delayed toxicity, QTc risk, CYP interactions, and renal/hepatic context.</li>
+              <li>No automatic rounding to tablet or liquid formulation is performed.</li>
+            </ul>
+          </div>
+        </section>
+      </section>
+
       <section class="reference-section" aria-label="Conversion reference">
         <div class="section-heading">
           <p class="eyebrow">Reference</p>
@@ -240,6 +357,26 @@
             </a>
           </li>
         </ul>
+
+        <div class="section-heading methadone-reference-heading">
+          <p class="eyebrow">Methadone</p>
+          <h2>Morphine:methadone ratios used</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">24-hour oral morphine equivalent</th>
+                <th scope="col">Morphine:methadone ratio</th>
+              </tr>
+            </thead>
+            <tbody id="methadoneRatioTable"></tbody>
+          </table>
+        </div>
+        <p class="reference-copy">
+          Methadone conversion uses nonlinear oral morphine:methadone ratios and
+          then applies the selected 75% to 90% additional reduction.
+        </p>
       </section>
     </main>
 
