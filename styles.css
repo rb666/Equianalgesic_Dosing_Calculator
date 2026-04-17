@@ -172,6 +172,71 @@ main {
   padding: 24px;
 }
 
+.compact-section {
+  margin: 24px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.compact-section > summary {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.compact-section > summary::-webkit-details-marker {
+  display: none;
+}
+
+.compact-title {
+  display: grid;
+  gap: 5px;
+}
+
+.compact-title .eyebrow {
+  margin: 0;
+}
+
+.compact-title strong {
+  color: var(--ink);
+  font-size: 1.28rem;
+  line-height: 1.2;
+}
+
+.compact-title span:last-child {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.summary-action {
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--accent-dark);
+  font-weight: 850;
+}
+
+.summary-action::before {
+  content: "Show";
+}
+
+.compact-section[open] .summary-action::before {
+  content: "Hide";
+}
+
+.compact-section-body.methadone-layout {
+  margin: 0 0 24px;
+}
+
+.compact-section-body.reference-section {
+  margin: 0 0 24px;
+}
+
 .section-heading {
   margin-bottom: 22px;
 }
@@ -499,6 +564,11 @@ footer p {
   .reference-section,
   .safety-banner {
     padding: 16px;
+  }
+
+  .compact-section > summary {
+    align-items: stretch;
+    display: grid;
   }
 
   .slider-header {
