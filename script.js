@@ -225,7 +225,12 @@ const methadoneRatioTable = [
 const buprenorphineSchedules = [
   {
     id: "30_59",
-    label: "30-59 mg MEDD",
+    label: "Belbuca: 30-59 mg MEDD",
+    title: "30-59 mg MEDD",
+    product: "Belbuca (buprenorphine buccal film)",
+    fullAgonistSummary:
+      "Continue full agonist opioids during days 1-4 while Belbuca is increased.",
+    stopSummary: "Stop full agonist opioids on day 5+.",
     days: [
       { day: "1", fullAgonist: "Continue", buprenorphine: "150 mcg BID (300 mcg TDD)" },
       { day: "2", fullAgonist: "Continue", buprenorphine: "300 mcg BID (600 mcg TDD)" },
@@ -236,7 +241,12 @@ const buprenorphineSchedules = [
   },
   {
     id: "60_89",
-    label: "60-89 mg MEDD",
+    label: "Belbuca: 60-89 mg MEDD",
+    title: "60-89 mg MEDD",
+    product: "Belbuca (buprenorphine buccal film)",
+    fullAgonistSummary:
+      "Continue full agonist opioids during days 1-4 while Belbuca is increased.",
+    stopSummary: "Stop full agonist opioids on day 5+.",
     days: [
       { day: "1", fullAgonist: "Continue", buprenorphine: "150 mcg BID (300 mcg TDD)" },
       { day: "2", fullAgonist: "Continue", buprenorphine: "300 mcg BID (600 mcg TDD)" },
@@ -247,7 +257,12 @@ const buprenorphineSchedules = [
   },
   {
     id: "90_120",
-    label: "90-120 mg MEDD",
+    label: "Belbuca: 90-120 mg MEDD",
+    title: "90-120 mg MEDD",
+    product: "Belbuca (buprenorphine buccal film)",
+    fullAgonistSummary:
+      "Continue full agonist opioids during days 1-4 while Belbuca is increased.",
+    stopSummary: "Stop full agonist opioids on day 5+.",
     days: [
       { day: "1", fullAgonist: "Continue", buprenorphine: "300 mcg BID (600 mcg TDD)" },
       {
@@ -270,7 +285,12 @@ const buprenorphineSchedules = [
   },
   {
     id: "121_160",
-    label: "121-160 mg MEDD",
+    label: "Belbuca: 121-160 mg MEDD",
+    title: "121-160 mg MEDD",
+    product: "Belbuca (buprenorphine buccal film)",
+    fullAgonistSummary:
+      "Continue full agonist opioids during days 1-4 while Belbuca is increased.",
+    stopSummary: "Stop full agonist opioids on day 5+.",
     days: [
       { day: "1", fullAgonist: "Continue", buprenorphine: "300 mcg BID (600 mcg TDD)" },
       {
@@ -285,6 +305,22 @@ const buprenorphineSchedules = [
         buprenorphine: "600 mcg QAM + 900 mcg QPM (1500 mcg TDD)",
       },
       { day: "5+", fullAgonist: "STOP", buprenorphine: "900 mcg BID (1800 mcg TDD)" },
+    ],
+  },
+  {
+    id: "161_300",
+    label: "Suboxone: 161-300 mg MEDD",
+    title: "161-300 mg MEDD",
+    product: "Suboxone (buprenorphine/naloxone 2 mg/0.5 mg film)",
+    fullAgonistSummary:
+      "Continue the full agonist full dose on days 1-3, reduce to 2/3 dose on day 4, then stop on day 5.",
+    stopSummary: "Stop full agonist opioids on day 5.",
+    days: [
+      { day: "1", fullAgonist: "Full dose", buprenorphine: "0.5 mg twice a day (1/4 film)" },
+      { day: "2", fullAgonist: "Full dose", buprenorphine: "1 mg twice a day (1/2 film)" },
+      { day: "3", fullAgonist: "Full dose", buprenorphine: "1 mg three times a day (1/2 film)" },
+      { day: "4", fullAgonist: "2/3 dose", buprenorphine: "1 film (2 mg) three times a day" },
+      { day: "5", fullAgonist: "None", buprenorphine: "2 films (4 mg) three times a day" },
     ],
   },
 ];
@@ -342,6 +378,7 @@ const buprenorphineCalculateButton = document.querySelector(
   "#buprenorphineCalculateButton",
 );
 const buprenorphineResultTitle = document.querySelector("#buprenorphineResultTitle");
+const buprenorphineProduct = document.querySelector("#buprenorphineProduct");
 const buprenorphineContinueSummary = document.querySelector(
   "#buprenorphineContinueSummary",
 );
@@ -651,16 +688,20 @@ const renderBuprenorphineSchedule = () => {
   const schedule = getBuprenorphineSchedule();
   const endpoint = schedule.days[schedule.days.length - 1];
 
-  buprenorphineResultTitle.textContent = schedule.label;
-  buprenorphineContinueSummary.textContent =
-    "Continue full agonist opioids during days 1-4 while buccal buprenorphine is increased.";
-  buprenorphineStopSummary.textContent =
-    `Stop full agonist opioids on day ${endpoint.day}.`;
+  buprenorphineResultTitle.textContent = schedule.title;
+  buprenorphineProduct.textContent = schedule.product;
+  buprenorphineContinueSummary.textContent = schedule.fullAgonistSummary;
+  buprenorphineStopSummary.textContent = schedule.stopSummary;
   buprenorphineEndpoint.textContent = endpoint.buprenorphine;
   buprenorphineScheduleTableBody.innerHTML = schedule.days
     .map((item) => {
-      const actionClass =
-        item.fullAgonist === "STOP" ? "stop-action" : "continue-action";
+      let actionClass = "continue-action";
+
+      if (item.fullAgonist === "STOP" || item.fullAgonist === "None") {
+        actionClass = "stop-action";
+      } else if (item.fullAgonist.includes("2/3")) {
+        actionClass = "taper-action";
+      }
 
       return `
         <tr>

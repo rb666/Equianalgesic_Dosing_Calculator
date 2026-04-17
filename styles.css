@@ -400,6 +400,11 @@ dd {
   font-weight: 850;
 }
 
+.taper-action {
+  color: #6f5d00;
+  font-weight: 850;
+}
+
 .stop-action {
   color: var(--warning);
   font-weight: 900;
